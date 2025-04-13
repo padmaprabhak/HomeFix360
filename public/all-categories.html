@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HomeFix3600 - Home Services</title>
+    <link rel="stylesheet" href="assets/styles.css">
+    <style>
+        body {
+            display: flex;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .sidebar {
+    width: 250px; /* Match exact width */
+    background-color: #2C3E50; /* Adjust color to match image */
+    color: white;
+    padding: 20px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.sidebar h2 {
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+.dropdown {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.dropdown label {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.dropdown select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #34495E; /* Adjust dropdown color */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    outline: none;
+}
+
+.dropdown select:hover, .dropdown select:focus {
+    background-color: #1ABC9C; /* Match highlight color */
+}
+
+        .main-content {
+            width: 80%;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Ensures responsive design */
+    gap: 20px;
+    padding: 20px;
+    justify-content: center; /* Centers the grid */
+}
+
+.service {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.service:hover {
+    transform: scale(1.05);
+}
+
+.service img {
+    width: 100%; /* Ensures images fit properly */
+    height: 150px; /* Set uniform height */
+    object-fit: cover; /* Crops images evenly */
+    border-radius: 5px;
+}
+
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Navigation</h2>
+    
+        <div class="menu">
+            <p>Category</p>
+            <div class="dropdown">
+                <select id="category-dropdown" onchange="navigatePage('category-dropdown')">
+                    <option value="all-categories">All Categories</option>
+                    <option value="add-category">Add Category</option>
+                </select>
+            </div>
+        </div>
+    
+        <div class="menu">
+            <p>Service</p>
+            <div class="dropdown">
+                <select id="service-dropdown" onchange="navigatePage('service-dropdown')">
+                    <option value="all-services">All Services</option>
+                    <option value="add-service">Add Service</option>
+                </select>
+            </div>
+        </div>
+    
+        <div class="menu">
+            <p>Charts</p>
+            <div class="dropdown">
+                <select id="charts-dropdown" onchange="navigatePage('charts-dropdown')">
+                    <option value="categories-chart">Categories Charts</option>
+                    <option value="services-chart">Services Charts</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function navigatePage(dropdownId) {
+            const selectElement = document.getElementById(dropdownId);
+            const selectedValue = selectElement.value;
+    
+            if (selectedValue) {
+                // Correct mapping for navigation
+                const pages = {
+                    "all-categories": "all-categories.html",
+                    "add-category": "add-category.html",
+                    "all-services": "all-services.html",
+                    "add-service": "add-service.html",
+                    "categories-chart": "categories-chart.html",
+                    "services-chart": "services-chart.html"
+                };
+    
+                // Make sure we have a valid page before navigating
+                if (pages[selectedValue]) {
+                    localStorage.setItem(dropdownId, selectedValue); // Save selection
+                    window.open(pages[selectedValue], "_self");
+
+                } else {
+                    console.error("Page not found for value:", selectedValue);
+                }
+            }
+        }
+    
+        function restoreSelection() {
+            const dropdowns = ["category-dropdown", "service-dropdown", "charts-dropdown"];
+    
+            dropdowns.forEach(id => {
+                const selectElement = document.getElementById(id);
+                const storedValue = localStorage.getItem(id);
+    
+                if (storedValue && selectElement) {
+                    selectElement.value = storedValue;  // Restore previous selection
+                }
+            });
+        }
+    
+        document.addEventListener("DOMContentLoaded", restoreSelection);
+    </script>
+    
+    
+    
+    
+    <div class="main-content">
+        <h2>All Categories</h2>
+        <div class="services-grid">
+            <a href="plumbing.html" class="service">
+                <img src="plumbing.jpg" alt="Plumbing">
+                <h3>Plumbing</h3>
+            </a>
+            <a href="electrician.html" class="service">
+                <img src="electrician.jpg" alt="Electrician">
+                <h3>Electrician</h3>
+            </a>
+            <a href="cleaning.html" class="service">
+                <img src="cleaning.jpg" alt="Cleaning Service">
+                <h3>Cleaning Service</h3>
+            </a>
+            <a href="hvac.html" class="service">
+                <img src="hvac.jpeg" alt="HVAC Services">
+                <h3>HVAC Services</h3>
+            </a>
+            <a href="carpentry.html" class="service">
+                <img src="carpentry.jpg" alt="Carpentry">
+                <h3>Carpentry</h3>
+            </a>
+            <a href="painting.html" class="service">
+                <img src="painting.jpg" alt="Painting Services">
+                <h3>Painting Services</h3>
+            </a>
+            <a href="security.html" class="service">
+                <img src="security.jpeg" alt="Home Security">
+                <h3>Home Security</h3>
+            </a>
+            <a href="appliance_repair.html" class="service">
+                <img src="appliance_repair.jpeg" alt="Appliance Repair">
+                <h3>Appliance Repair</h3>
+            </a>
+            <a href="gutter.html" class="service">
+                <img src="gutter.jpeg" alt="Gutter Cleaning">
+                <h3>Gutter Cleaning</h3>
+            </a>
+            <a href="handyman.html" class="service">
+                <img src="handyman.jpeg" alt="Handyman">
+                <h3>Handyman</h3>
+            </a>
+            <a href="junk_removal.html" class="service">
+                <img src="junk_removal.jpeg" alt="Junk Removal">
+                <h3>Junk Removal</h3>
+            </a>
+            <a href="landscaping.html" class="service">
+                <img src="landscaping.jpeg" alt="Landscaping">
+                <h3>Landscaping</h3>
+            </a>
+            <a href="pest_control.html" class="service">
+                <img src="pest_control.jpeg" alt="Pest Control">
+                <h3>Pest Control</h3>
+            </a>
+            <a href="roofing.html" class="service">
+                <img src="roofing.jpeg" alt="Roofing">
+                <h3>Roofing</h3>
+            </a>
+            <a href="smart_home.html" class="service">
+                <img src="smart_home.jpeg" alt="Smart Home Installation">
+                <h3>Smart Home Installation</h3>
+            </a>
+            <a href="waterproofing.html" class="service">
+                <img src="waterproofing.jpeg" alt="Waterproofing">
+                <h3>Waterproofing</h3>
+            </a>
+            <a href="windows.html" class="service">
+                <img src="windows.jpeg" alt="Window Services">
+                <h3>Window Services</h3>
+            </a>
+        </div>
+    </div>
+    
+    
+
+</body>
+</html>

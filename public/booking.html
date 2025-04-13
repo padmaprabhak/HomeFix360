@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Booking | HomeFix360</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            width: 50%;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+        }
+        p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        .btn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Service Booking</h2>
+        <p><strong>Name:</strong> <span id="service-name">Loading...</span></p>
+        <p><strong>Category:</strong> <span id="service-category">Loading...</span></p>
+        <p><strong>City:</strong> <span id="service-city">Loading...</span></p>
+        <p><strong>State:</strong> <span id="service-state">Loading...</span></p>
+        <p><strong>Tags:</strong> <span id="service-tags">Loading...</span></p>
+        <p><strong>Owner Name:</strong> <span id="owner-name">Loading...</span></p>
+        <p><strong>Owner Number:</strong> <span id="owner-number">Loading...</span></p>
+        <p><strong>Experience:</strong> <span id="service-experience">Loading...</span> years</p>
+        <p><strong>Customers Served:</strong> <span id="customers-served">Loading...</span></p>
+
+        <button class="btn" id="bookNowBtn">Book Now</button>
+    </div>
+
+    <script>
+        async function fetchServiceDetails() {
+            // Get service name from URL query parameters
+            const params = new URLSearchParams(window.location.search);
+            const serviceName = params.get("name");
+
+            // Log the service name for debugging
+            console.log('Service name from URL:', serviceName);
+
+            if (!serviceName) {
+                alert("Service Name not found in the URL!");
+                return;
+            }
+
+            try {
+                // Fetch the service details from the backend API
+                const response = await fetch(`/api/services/name/${encodeURIComponent(serviceName)}`);
+
+                // Log the raw response to check if the fetch is working
+                console.log('API Response:', response);
+
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status} ${response.statusText}`);
+                }
+
+                const service = await response.json();
+
+                // Log the parsed JSON response
+                console.log('Parsed Service:', service);
+
+                if (!service.name) {
+                    alert("Service not found in the database!");
+                    return;
+                }
+
+                // Populate the details on the page
+                document.getElementById("service-name").textContent = service.name || "N/A";
+                document.getElementById("service-category").textContent = service.category || "N/A";
+                document.getElementById("service-city").textContent = service.city || "N/A";
+                document.getElementById("service-state").textContent = service.state || "N/A";
+                document.getElementById("service-tags").textContent = service.tags ? service.tags.join(", ") : "N/A";
+                document.getElementById("owner-name").textContent = service.ownerName || "N/A";
+                document.getElementById("owner-number").textContent = service.ownerNumber || "N/A";
+                document.getElementById("service-experience").textContent = service.experience || "N/A";
+                document.getElementById("customers-served").textContent = service.customersServed || "N/A";
+
+            } catch (error) {
+                console.error("Error fetching service details:", error);
+                alert("There was an error fetching the service details. Please try again later.");
+            }
+        }
+
+        // Fetch the service details as soon as the page loads
+        document.addEventListener("DOMContentLoaded", fetchServiceDetails);
+
+        // Book Now button handler (placeholder for future booking logic)
+        document.getElementById("bookNowBtn").addEventListener("click", () => {
+            alert("Your booking request has been submitted!");
+        });
+    </script>
+
+</body>
+</html>

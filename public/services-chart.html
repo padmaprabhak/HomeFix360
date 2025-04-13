@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Distribution by Location</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        canvas {
+            max-width: 600px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Services Distribution by Location</h2>
+    <canvas id="servicesChart"></canvas>
+
+    <script>
+        async function fetchServiceData() {
+            try {
+                const response = await fetch("/get-services");
+
+                if (!response.ok) {
+                    throw new Error(`HTTP Error! Status: ${response.status}`);
+                }
+
+                const services = await response.json();
+                console.log("Fetched Services:", services);
+
+                // Process data for Pie Chart (count services per state)
+                const locationCount = {};
+                services.forEach(service => {
+                    locationCount[service.state] = (locationCount[service.state] || 0) + 1;
+                });
+
+                const labels = Object.keys(locationCount);
+                const data = Object.values(locationCount);
+
+                // Render Chart
+                const ctx = document.getElementById("servicesChart").getContext("2d");
+                new Chart(ctx, {
+                    type: "pie",
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: data,
+                            backgroundColor: [
+                                "#FF6384", "#36A2EB", "#FFCE56", "#4CAF50", "#FF5733",
+                                "#9C27B0", "#FF9800", "#8BC34A", "#00BCD4", "#E91E63"
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { position: "bottom" }
+                        }
+                    }
+                });
+
+            } catch (error) {
+                console.error("❌ Error fetching service data:", error);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", fetchServiceData);
+    </script>
+
+</body>
+</html>

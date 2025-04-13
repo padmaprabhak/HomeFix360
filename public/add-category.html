@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HomeFix3600 - Home Services</title>
+    <link rel="stylesheet" href="assets/styles.css">
+    <style>
+        body {
+            display: flex;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #2C3E50;
+            color: white;
+            padding: 20px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .sidebar h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+        .dropdown {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .dropdown label {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        .dropdown select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #34495E;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            outline: none;
+        }
+        .dropdown select:hover, .dropdown select:focus {
+            background-color: #1ABC9C;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Navigation</h2>
+    
+        <div class="menu">
+            <p>Category</p>
+            <div class="dropdown">
+                <select id="category-dropdown" onchange="navigatePage('category-dropdown')">
+                    <option value="all-categories">All Categories</option>
+                    <option value="add-category">Add Category</option>
+                </select>
+            </div>
+        </div>
+    
+        <div class="menu">
+            <p>Service</p>
+            <div class="dropdown">
+                <select id="service-dropdown" onchange="navigatePage('service-dropdown')">
+                    <option value="all-services">All Services</option>
+                    <option value="add-service">Add Service</option>
+                </select>
+            </div>
+        </div>
+    
+        <div class="menu">
+            <p>Charts</p>
+            <div class="dropdown">
+                <select id="charts-dropdown" onchange="navigatePage('charts-dropdown')">
+                    <option value="categories-chart">Categories Charts</option>
+                    <option value="services-chart">Services Charts</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function navigatePage(dropdownId) {
+            const selectElement = document.getElementById(dropdownId);
+            const selectedValue = selectElement.value;
+    
+            if (selectedValue) {
+                // Correct mapping for navigation
+                const pages = {
+                    "all-categories": "all-categories.html",
+                    "add-category": "add-category.html",
+                    "all-services": "all-services.html",
+                    "add-service": "add-service.html",
+                    "categories-chart": "categories-chart.html",
+                    "services-chart": "services-chart.html"
+                };
+    
+                // Make sure we have a valid page before navigating
+                if (pages[selectedValue]) {
+                    localStorage.setItem(dropdownId, selectedValue); // Save selection
+                    window.open(pages[selectedValue], "_self");
+
+                } else {
+                    console.error("Page not found for value:", selectedValue);
+                }
+            }
+        }
+    
+        function restoreSelection() {
+            const dropdowns = ["category-dropdown", "service-dropdown", "charts-dropdown"];
+    
+            dropdowns.forEach(id => {
+                const selectElement = document.getElementById(id);
+                const storedValue = localStorage.getItem(id);
+    
+                if (storedValue && selectElement) {
+                    selectElement.value = storedValue;  // Restore previous selection
+                }
+            });
+        }
+    
+        document.addEventListener("DOMContentLoaded", restoreSelection);
+    </script>
+    
+    
+    
+    
+    
+    
+    <div class="main-content">
+        <h2>Add Category</h2>
+        <div class="category-box">
+            <h3>Add Category</h3>
+            <p>Please add category in home service</p>
+            <form>
+                <label for="category-name">Category Name:</label>
+                <input type="text" id="category-name" name="category-name" autocomplete="off" required>
+                
+                <label for="category-description">Category Description:</label>
+                <textarea id="category-description" name="category-description" autocomplete="off" required></textarea>
+                
+                <button type="submit">Add Category</button>
+            </form>
+            <p>Find existing category? <a href="allcategories.html">All Category</a></p>
+        </div>
+    </div>
+<!--     
+    <script>
+        function navigatePage(value) {
+            const pages = {
+                "all-categories": "allcategories.html",
+                "add-category": "addcategory.html",
+                "all-services": "allservices.html",
+                "add-service": "addservice.html",
+                "categories-chart": "categories-chart.html",
+                "services-chart": "services-chart.html"
+            };
+            
+            if (pages[value]) {
+                window.location.href = pages[value];
+            }
+        }
+    </script> -->
+    
+    <style>
+        .main-content {
+            padding: 200px;
+        }
+        .category-box {
+            border: 1px solid #ccc;
+            padding: 60px;
+            width: 500px;
+            border-radius: 5px;
+        }
+        input, textarea {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 5px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</body>
+</html>

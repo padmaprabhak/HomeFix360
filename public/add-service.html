@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HomeFix3600 - Home Services</title>
+    <link rel="stylesheet" href="assets/styles.css">
+    <style>
+        body {
+            display: flex;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #2C3E50;
+            color: white;
+            padding: 20px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .sidebar h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+        .dropdown {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .dropdown label {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        .dropdown select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #34495E;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            outline: none;
+        }
+        .dropdown select:hover, .dropdown select:focus {
+            background-color: #1ABC9C;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Navigation</h2>
+    
+        <div class="menu">
+            <p>Category</p>
+            <div class="dropdown">
+                <select id="category-dropdown" onchange="navigatePage('category-dropdown')">
+                    <option value="all-categories">All Categories</option>
+                    <option value="add-category">Add Category</option>
+                </select>
+            </div>
+        </div>
+    
+        <div class="menu">
+            <p>Service</p>
+            <div class="dropdown">
+                <select id="service-dropdown" onchange="navigatePage('service-dropdown')">
+                    <option value="all-services">All Services</option>
+                    <option value="add-service">Add Service</option>
+                </select>
+            </div>
+        </div>
+    
+        <div class="menu">
+            <p>Charts</p>
+            <div class="dropdown">
+                <select id="charts-dropdown" onchange="navigatePage('charts-dropdown')">
+                    <option value="categories-chart">Categories Charts</option>
+                    <option value="services-chart">Services Charts</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <script>
+        function navigatePage(dropdownId) {
+            const selectElement = document.getElementById(dropdownId);
+            const selectedValue = selectElement.value;
+    
+            if (selectedValue) {
+                // Correct mapping for navigation
+                const pages = {
+                    "all-categories": "all-categories.html",
+                    "add-category": "add-category.html",
+                    "all-services": "all-services.html",
+                    "add-service": "add-service.html",
+                    "categories-chart": "categories-chart.html",
+                    "services-chart": "services-chart.html"
+                };
+    
+                // Make sure we have a valid page before navigating
+                if (pages[selectedValue]) {
+                    localStorage.setItem(dropdownId, selectedValue); // Save selection
+                    window.open(pages[selectedValue], "_self");
+
+                } else {
+                    console.error("Page not found for value:", selectedValue);
+                }
+            }
+        }
+    
+        function restoreSelection() {
+            const dropdowns = ["category-dropdown", "service-dropdown", "charts-dropdown"];
+    
+            dropdowns.forEach(id => {
+                const selectElement = document.getElementById(id);
+                const storedValue = localStorage.getItem(id);
+    
+                if (storedValue && selectElement) {
+                    selectElement.value = storedValue;  // Restore previous selection
+                }
+            });
+        }
+    
+        document.addEventListener("DOMContentLoaded", restoreSelection);
+    </script>
+    
+    
+    
+    
+    
+    
+    <div class="main-content">
+        <form id="serviceForm">
+            <label>Service Name:</label>
+            <input type="text" id="name" required>
+    
+            <label>Category:</label>
+            <select id="category" required>
+                <option value="Plumbing">Plumbing</option>
+                <option value="Electrician">Electrician</option>
+                <option value="Cleaning Service">Cleaning Service</option>
+                <option value="HVAC Services">HVAC Services</option>
+                <option value="Carpentry">Carpentry</option>
+                <option value="Painting Services">Painting Services</option>
+                <option value="Home Security">Home Security</option>
+                <option value="Appliance Repair">Appliance Repair</option>
+                <option value="Gutter Cleaning">Gutter Cleaning</option>
+                <option value="Handyman">Handyman</option>
+                <option value="Junk Removal">Junk Removal</option>
+                <option value="Landscaping">Landscaping</option>
+                <option value="Pest Control">Pest Control</option>
+                <option value="Roofing">Roofing</option>
+                <option value="Smart Home Installation">Smart Home Installation</option>
+                <option value="Waterproofing">Waterproofing</option>
+                <option value="Window Services">Window Services</option>
+            </select>
+    
+            <label>State:</label>
+            <select id="state" required onchange="populateCities()">
+                <option value="">Select State</option>
+            </select>
+    
+            <label>City:</label>
+            <select id="city" required>
+                <option value="">Select City</option>
+            </select>
+    
+            <label>Tags (comma separated):</label>
+            <input type="text" id="tags">
+    
+            <label>Owner Name:</label>
+            <input type="text" id="ownerName" required>
+    
+            <label>Owner Number:</label>
+            <input type="text" id="ownerNumber" required>
+    
+            <label>Experience (years):</label>
+            <input type="number" id="experience" required>
+    
+            <label>Customers Served:</label>
+            <input type="number" id="customersServed" required>
+    
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    
+    <script>
+        // List of Indian states and cities
+        const stateCityMap = {
+            "Andhra Pradesh": ["Visakhapatnam", "Vijayawada", "Guntur", "Nellore"],
+            "Bihar": ["Patna", "Gaya", "Bhagalpur", "Muzaffarpur"],
+            "Delhi": ["New Delhi", "Dwarka", "Rohini", "Saket"],
+            "Gujarat": ["Ahmedabad", "Surat", "Vadodara", "Rajkot"],
+            "Karnataka": ["Bangalore", "Mysore", "Mangalore", "Hubli"],
+            "Maharashtra": ["Mumbai", "Pune", "Nagpur", "Nashik"],
+            "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai", "Tiruchirapalli"],
+            "Telangana": ["Hyderabad", "Warangal", "Nizamabad", "Khammam"],
+            "Uttar Pradesh": ["Lucknow", "Kanpur", "Agra", "Varanasi"],
+            "West Bengal": ["Kolkata", "Howrah", "Durgapur", "Siliguri"]
+        };
+    
+        // Populate State Dropdown
+        const stateSelect = document.getElementById("state");
+        for (const state in stateCityMap) {
+            const option = document.createElement("option");
+            option.value = state;
+            option.textContent = state;
+            stateSelect.appendChild(option);
+        }
+    
+        // Populate City Dropdown based on Selected State
+        function populateCities() {
+            const citySelect = document.getElementById("city");
+            citySelect.innerHTML = '<option value="">Select City</option>'; // Clear previous cities
+            const selectedState = document.getElementById("state").value;
+            
+            if (stateCityMap[selectedState]) {
+                stateCityMap[selectedState].forEach(city => {
+                    const option = document.createElement("option");
+                    option.value = city;
+                    option.textContent = city;
+                    citySelect.appendChild(option);
+                });
+            }
+        }
+    
+        // Submit form data to the backend
+        document.getElementById("serviceForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+    
+            const serviceData = {
+                name: document.getElementById("name").value,
+                category: document.getElementById("category").value,
+                city: document.getElementById("city").value,
+                state: document.getElementById("state").value,
+                tags: document.getElementById("tags").value.split(","),
+                ownerName: document.getElementById("ownerName").value,
+                ownerNumber: document.getElementById("ownerNumber").value,
+                experience: document.getElementById("experience").value,
+                customersServed: document.getElementById("customersServed").value
+            };
+    
+            const response = await fetch("/add-service", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(serviceData)
+            });
+    
+            const result = await response.json();
+            alert(result.message);
+            window.location.href = "/all-services.html";
+        });
+    </script>
+    
+    
+    <!-- <script>
+        function navigatePage(value) {
+            const pages = {
+                "all-categories": "allcategories.html",
+                "add-category": "addcategory.html",
+                "all-services": "allservices.html",
+                "add-service": "addservice.html",
+                "categories-chart": "categories-chart.html",
+                "services-chart": "services-chart.html"
+            };
+            
+            if (pages[value]) {
+                window.location.href = pages[value];
+            }
+        } -->
+    </script>
+    
+    <style>
+        .main-content {
+            padding: 20px;
+        }
+        .service-box {
+            border: 1px solid #ccc;
+            padding: 60px;
+            width: 800px;
+            border-radius: 5px;
+        }
+        input, textarea, select {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 5px;
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</body>
+</html>

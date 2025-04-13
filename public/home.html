@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | HomeFix360</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        .filter-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .filter-section select {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .filter-section button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .filter-section button:hover {
+            background-color: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to HomeFix360</h1>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <select id="serviceFilter">
+                <option value="">Select Service</option>
+                <option value="Plumbing">Plumbing</option>
+                <option value="Electrician">Electrician</option>
+                <option value="Cleaning Service">Cleaning Service</option>
+                <option value="HVAC Services">HVAC Services</option>
+                <option value="Carpentry">Carpentry</option>
+                <option value="Painting Services">Painting Services</option>
+                <option value="Home Security">Home Security</option>
+                <option value="Appliance Repair">Appliance Repair</option>
+                <option value="Gutter Cleaning">Gutter Cleaning</option>
+                <option value="Handyman">Handyman</option>
+                <option value="Junk Removal">Junk Removal</option>
+                <option value="Landscaping">Landscaping</option>
+                <option value="Pest Control">Pest Control</option>
+                <option value="Roofing">Roofing</option>
+                <option value="Smart Home Installation">Smart Home Installation</option>
+                <option value="Waterproofing">Waterproofing</option>
+                <option value="Window Services">Window Services</option>
+            </select>
+
+            <select id="stateFilter">
+                <option value="">Select State</option>
+                <option value="Andhra Pradesh">Andhra Pradesh</option>
+                <option value="Bihar">Bihar</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Gujarat">Gujarat</option>
+                <option value="Karnataka">Karnataka</option>
+                <option value="Maharashtra">Maharashtra</option>
+                <option value="Tamil Nadu">Tamil Nadu</option>
+                <option value="Telangana">Telangana</option>
+                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                <option value="West Bengal">West Bengal</option>
+            </select>
+
+            <select id="cityFilter">
+                <option value="">Select City</option>
+            </select>
+
+            <button id="filterBtn">Filter</button>
+        </div>
+
+        <!-- Service Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Tags</th>
+                    <th>Owner Name</th>
+                    <th>Owner Number</th>
+                    <th>Experience</th>
+                    <th>Customers Served</th>
+                </tr>
+            </thead>
+            <tbody id="service-table-body">
+                <!-- Data will be inserted here dynamically -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // State-to-city mapping
+        const stateCityMap = {
+            "Andhra Pradesh": ["Visakhapatnam", "Vijayawada", "Guntur", "Nellore"],
+            "Bihar": ["Patna", "Gaya", "Bhagalpur", "Muzaffarpur"],
+            "Delhi": ["New Delhi", "Dwarka", "Rohini", "Saket"],
+            "Gujarat": ["Ahmedabad", "Surat", "Vadodara", "Rajkot"],
+            "Karnataka": ["Bangalore", "Mysore", "Mangalore", "Hubli"],
+            "Maharashtra": ["Mumbai", "Pune", "Nagpur", "Nashik"],
+            "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai", "Tiruchirapalli"],
+            "Telangana": ["Hyderabad", "Warangal", "Nizamabad", "Khammam"],
+            "Uttar Pradesh": ["Lucknow", "Kanpur", "Agra", "Varanasi"],
+            "West Bengal": ["Kolkata", "Howrah", "Durgapur", "Siliguri"]
+        };
+
+        const serviceFilter = document.getElementById('serviceFilter');
+        const stateFilter = document.getElementById('stateFilter');
+        const cityFilter = document.getElementById('cityFilter');
+        const filterBtn = document.getElementById('filterBtn');
+        const serviceTableBody = document.getElementById('service-table-body');
+
+        let allServices = []; // To store all services
+
+        async function fetchData() {
+        try {
+            const response = await fetch('/api/services'); // Fetch all services
+            const data = await response.json();
+            allServices = data; // Store the fetched data
+
+            // Initial rendering of all services
+            renderServices(allServices);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
+
+    function renderServices(services) {
+        serviceTableBody.innerHTML = ''; // Clear previous data
+        services.forEach(service => {
+            const row = `
+                <tr>
+                    <td><a href="booking.html?name=${encodeURIComponent(service.name)}&category=${encodeURIComponent(service.category)}&city=${encodeURIComponent(service.city)}&state=${encodeURIComponent(service.state)}&tags=${encodeURIComponent(service.tags ? service.tags.join(', ') : '')}&ownerName=${encodeURIComponent(service.ownerName)}&ownerNumber=${encodeURIComponent(service.ownerNumber)}&experience=${encodeURIComponent(service.experience)}&customersServed=${encodeURIComponent(service.customersServed)}">${service.name}</a></td>
+                    <td>${service.category}</td>
+                    <td>${service.city}</td>
+                    <td>${service.state}</td>
+                    <td>${service.tags ? service.tags.join(', ') : ''}</td>
+                    <td>${service.ownerName}</td>
+                    <td>${service.ownerNumber}</td>
+                    <td>${service.experience} years</td>
+                    <td>${service.customersServed}</td>
+                </tr>
+            `;
+            serviceTableBody.innerHTML += row;
+        });
+    }
+
+    // Filter the services based on the selected filters
+    function filterServices() {
+        const serviceValue = serviceFilter.value.toLowerCase();
+        const stateValue = stateFilter.value.toLowerCase();
+        const cityValue = cityFilter.value.toLowerCase();
+
+        const filteredServices = allServices.filter(service => {
+            const serviceMatch = service.name.toLowerCase().includes(serviceValue) || service.category.toLowerCase().includes(serviceValue);
+            const stateMatch = stateValue ? service.state.toLowerCase().includes(stateValue) : true;
+            const cityMatch = cityValue ? service.city.toLowerCase().includes(cityValue) : true;
+
+            return serviceMatch && stateMatch && cityMatch;
+        });
+
+        renderServices(filteredServices);
+    }
+
+    // Event listener for the filter button
+    filterBtn.addEventListener('click', filterServices);
+
+    // Fetch data when the page loads
+    document.addEventListener('DOMContentLoaded', fetchData);
+    </script>
+</body>
+</html>

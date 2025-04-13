@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plumbing Services</title>
+    <link rel="stylesheet" href="assets/styles.css">
+    <script>
+        async function fetchData() {
+            try {
+                const response = await fetch('/api/services?category=Plumbing'); // Fetch only Plumbing services
+                const data = await response.json();
+
+                const tableBody = document.getElementById('service-table-body');
+                tableBody.innerHTML = ''; // Clear previous data
+
+                data.forEach(service => {
+                    const row = `
+                        <tr>
+                            <td>${service.name}</td>
+                            <td>${service.category}</td>
+                            <td>${service.city}</td>
+                            <td>${service.state}</td>
+                            <td>${service.tags.join(', ')}</td>
+                            <td>${service.ownerName}</td>
+                            <td>${service.ownerNumber}</td>
+                            <td>${service.experience} years</td>
+                            <td>${service.customersServed}</td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                });
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchData);
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h2>Plumbing Services</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Category</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Tags</th>
+                <th>Owner Name</th>
+                <th>Owner Number</th>
+                <th>Experience</th>
+                <th>Customers Served</th>
+            </tr>
+        </thead>
+        <tbody id="service-table-body">
+            <!-- Data will be inserted here -->
+        </tbody>
+    </table>
+</body>
+</html>

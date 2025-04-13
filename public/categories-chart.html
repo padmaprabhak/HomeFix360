@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories Pie Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        canvas {
+            max-width: 600px;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <h2>Category Distribution</h2>
+    <canvas id="categoriesChart"></canvas>
+
+    <script>
+        async function fetchCategoryData() {
+            try {
+                const response = await fetch('/api/services');
+                const services = await response.json();
+
+                // Count unique categories
+                const categoryCounts = {};
+                services.forEach(service => {
+                    categoryCounts[service.category] = (categoryCounts[service.category] || 0) + 1;
+                });
+
+                const categories = Object.keys(categoryCounts);
+                const counts = Object.values(categoryCounts);
+
+                // Generate Pie Chart
+                const ctx = document.getElementById('categoriesChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: categories,
+                        datasets: [{
+                            data: counts,
+                            backgroundColor: ['red', 'blue', 'green', 'yellow', 'purple', 'orange']
+                        }]
+                    }
+                });
+            } catch (error) {
+                console.error('Error fetching category data:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchCategoryData);
+    </script>
+</body>
+</html>
